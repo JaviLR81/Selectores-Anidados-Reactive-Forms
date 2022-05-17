@@ -30,21 +30,24 @@ export class SelectorPageComponent implements OnInit {
   cargando: boolean = false;
 
 
-  constructor( private fb: FormBuilder,
-               private paisesService: PaisesService ) { }
+  constructor(
+    private fb: FormBuilder,
+    private paisesService: PaisesService
+  ) { }
 
   ngOnInit(): void {
 
     this.regiones = this.paisesService.regiones;
-
 
     // Cuando cambie la region
     this.miFormulario.get('region')?.valueChanges
       .pipe(
         tap( ( _ ) => {
           this.miFormulario.get('pais')?.reset('');
+          // this.miFormulario.get('pais')?.setValue('');
           this.cargando = true;
         }),
+        // Toma el valor que resulve de un observable y regresa otro observable
         switchMap( region => this.paisesService.getPaisesPorRegion( region ) )
       )
       .subscribe( paises => {
